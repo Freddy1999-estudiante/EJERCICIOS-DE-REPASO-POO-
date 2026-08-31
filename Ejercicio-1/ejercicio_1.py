@@ -101,6 +101,6 @@ def estadisticas(numeros):
 # Resultado final:
 # {"total": 45, "promedio": 7.5, "max": 12, "min": 3, "pares": 3}
 # USO
-r = estadisticas([8, 5, 12, 7, 3, 10])
-print(r)
-print(f"Promedio: {r['promedio']:.2f}")
+#r = estadisticas([8, 5, 12, 7, 3, 10])
+#print(r)
+#print(f"Promedio: {r['promedio']:.2f}")
