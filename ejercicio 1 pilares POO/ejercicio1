@@ -1,0 +1,126 @@
+# EJERCICIO 1 - CUENTA BANCARIA CON @PROPERTY
+# 1. ENTENDER EL PROBLEMA
+# Entrada:
+# Operaciones realizadas sobre una cuenta bancaria.
+# Proceso:
+# Encapsular el saldo utilizando _saldo, mostrarlo mediante
+# @property y calcular dinámicamente el tipo de cuenta.
+# Salida:
+# Estado de la cuenta y su categoría según el saldo.
+# Ejemplo:
+# Depositar 5000 y retirar 1000.
+# Resultado esperado:
+# Saldo: 4000
+# Tipo: premium
+
+# 2. BOSQUEJO
+# c = CuentaBancaria("Ana", 0)
+# c.depositar(5000)       -> _saldo = 5000
+# c.retirar(1000)         -> _saldo = 4000
+# c.saldo                 -> 4000
+# c.tipo                  -> "premium"
+# c.es_cliente_preferencial -> False
+# Si el saldo llega a 5000 o más:
+# c.es_cliente_preferencial -> True
+# c.saldo = 20000
+# -> ERROR: property de solo lectura
+
+# 3. DESCUBRIR EL PATRÓN
+# Aquí me doy cuenta de que @property permite acceder a un
+# método como si fuera un atributo, sin utilizar paréntesis.
+# La propiedad saldo permite consultar _saldo sin modificarlo
+# directamente.
+# La propiedad tipo es un valor calculado dinámicamente,
+# porque depende del saldo actual.
+
+
+# 4. ADAPTACIÓN REALIZADA
+# Se mantuvo el código original del ingeniero.
+# Como adaptación, se agregó la propiedad calculada
+# "es_cliente_preferencial".
+# Esta propiedad verifica si el saldo es igual o superior
+# a $5.000.
+# También se agregaron pruebas para comprobar que la nueva
+# propiedad cambia automáticamente cuando cambia el saldo.
+# Se mantiene el encapsulamiento de _saldo y la propiedad
+# saldo continúa siendo de solo lectura.
+
+# 5. CÓDIGO
+
+class CuentaBancaria:
+    def __init__(self, titular, saldo_inicial=0):
+        self.titular = titular
+        self._saldo = saldo_inicial
+
+    @property
+    def saldo(self):
+        return self._saldo
+
+    @property
+    def tipo(self):
+        if self._saldo >= 10_000:
+            return "gold"
+        if self._saldo >= 1_000:
+            return "premium"
+        return "básica"
+
+    # ADAPTACIÓN:
+    # Nueva propiedad calculada para determinar si el cliente
+    # es considerado preferencial según su saldo.
+    @property
+    def es_cliente_preferencial(self):
+        return self._saldo >= 5_000
+
+    def depositar(self, monto):
+        if monto <= 0:
+            raise ValueError("Monto debe ser positivo")
+        self._saldo += monto
+
+    def retirar(self, monto):
+        if monto <= 0:
+            raise ValueError("Monto debe ser positivo")
+        if monto > self._saldo:
+            raise ValueError("Saldo insuficiente")
+        self._saldo -= monto
+
+    def __str__(self):
+        return f"{self.titular}: ${self._saldo:.2f} ({self.tipo})"
+
+
+# 6. PRUEBA PASO A PASO
+# Creamos una cuenta con saldo inicial de 0.
+# c = CuentaBancaria("Ana")
+# Depositamos 5000:
+# c.depositar(5000)
+# Saldo = 5000
+# Retiramos 1000:
+# c.retirar(1000)
+# Saldo = 4000
+# Consultamos el saldo:
+# c.saldo
+# Resultado: 4000
+# Consultamos el tipo:
+# c.tipo
+# Resultado: "premium"
+# Consultamos la nueva propiedad:
+# c.es_cliente_preferencial
+# Resultado: False
+# Depositamos 1000 más:
+# c.depositar(1000)
+# Saldo = 5000
+# Volvemos a consultar:
+# c.es_cliente_preferencial
+# Resultado: True
+
+
+# USO / PRUEBA
+# c = CuentaBancaria("Ana")
+# c.depositar(5000)
+# c.retirar(1000)
+# print(c)
+# print(c.saldo)
+# print(c.tipo)
+# print(c.es_cliente_preferencial)
+# c.depositar(1000)
+# print(c.saldo)
+# print(c.es_cliente_preferencial)
